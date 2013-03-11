@@ -54,9 +54,25 @@ description = "This behavior will approach a seen ball, trying to avoid obstacle
 postcondition = m.is_now('goal_aligned',['True'])
 description = "This behavior will circle around the ball until it and the target goal in in a line."
 
+[ragnarok]
+postcondition = False
+decscription = "Test FC Ragnarok"
+
+[searchball]
+postcondition = m.is_now('searchball',['True'])
+description = "This behavior will search the ball until it has found a red blob that is big enough"
+
 [shoot]
 postcondition = m.is_now('goal_scored',['True'])
 description = "This behavior will try to kick a ball at the Nao's feet into the goal."
+
+[sitdown]
+postcondition = m.is_now('sittingdown',['True'])
+description = "This behavior will try to sit down."
+
+[standup]
+postcondition = m.is_now('standingup',['True'])
+description = "This behavior will try to stand up"
 
 [soccer_defender]
 postcondition = False

@@ -115,10 +115,10 @@ class Nao(object):
         self.__Navigation.moveTo(X, Y, Teta)
 
     def isWalking(self):
-        return self.__Motion.walkIsActive()    
-        
+        return self.__Motion.walkIsActive()
+
     def isMoving(self):
-        return self.__Motion.moveIsActive()
+        return self.__Motion.moveIsActive()    
         
     def stopwalk(self):
         self.__Motion.stopWalk()
@@ -508,35 +508,7 @@ class Nao(object):
         """
         self.get_proxy("motion").setStiffnesses("Head", 1.0)
         self.get_proxy("motion").angleInterpolation("HeadPitch", 0, 1.0, True)
-    
-    def look_forward(self):
-        """
-        Makes the Nao look straigth forward
-        """
-        self.get_proxy("motion").setStiffnesses("Head", 1.0)
-        self.get_proxy("motion").angleInterpolation("HeadPitch", 0, 1.0, True)
-        self.get_proxy("motion").angleInterpolation("HeadYaw", 0, 1.0, True)
-        
-    def look_forward_down(self):
-        """
-        Makes the Nao look straigth forward
-        """
-        self.get_proxy("motion").setStiffnesses("Head", 1.0) 
-        self.get_proxy("motion").angleInterpolation("HeadYaw", 0, 1.0, True)        
-    
-    def look_right(self):
-        """
-        Makes the Nao look right.
-        """
-        self.get_proxy("motion").setStiffnesses("Head", 1.0)
-        self.get_proxy("motion").angleInterpolation("HeadYaw", -(45 * almath.TO_RAD), 1.0, True)
 
-    def look_left(self):
-        """
-        Makes the Nao look left.
-        """
-        self.get_proxy("motion").setStiffnesses("Head", 1.0)
-        self.get_proxy("motion").angleInterpolation("HeadYaw", 45 * almath.TO_RAD, 1.0, True)
 
     def sit_down(self):
         """
@@ -570,53 +542,6 @@ class Nao(object):
 
         # Disable stiffness 
         self.set_stifness(['Body'], [0], [0.25])
-        
-    def useTopCamera(self):
-        self.__Video.setParam(18, 0)
-
-    def useBottomCamera(self):
-        self.__Video.setParam(18, 1)
-        
-    def initCamera(self):
-        #Default Camera Settings
-        #Basic Settings
-        
-        #Color Settings
-        #Gain: 26 / Exp: 83
-        #Gain: 28 / Exp: 60
-        #Gain: 35 / Exp: 40
-        
-        #AUTO_GAIN (AUTO GAIN OFF = 0)
-        self.__Video.setParam(13, 0)
-        #CAMERA_GAIN
-        self.__Video.setParam(6, 133)
-        #AUTO_WHITEBALANCE (AUTO WB OFF = 0)
-        self.__Video.setParam(12, 0)
-        #CAMERA_BLUECHROMA
-        self.__Video.setParam(5, 131)
-        #CAMERA_REDCHROMA
-        self.__Video.setParam(4, 70)
-        #CAMERA_BRIGHTNESS
-        self.__Video.setParam(0, 109)
-        #CAMERA_CONTRAST
-        self.__Video.setParam(1, 44)
-        #CAMERA_SATURATION
-        self.__Video.setParam(2, 95)
-        #CAMERA_HUE
-        self.__Video.setParam(3, 0)
-        
-        #Exposure length
-        #CAMERA_AUTO_EXPOSITION (AUTO EXPOSURE OFF =0)
-        self.__Video.setParam(11, 0)
-        #CAMERA_EXPOSURE
-        self.__Video.setParam(17, 300)
-        
-        #Image orientation
-        #CAMERA_HFLIP
-        self.__Video.setParam(7, 0)
-        #CAMERA_VFLIP
-        self.__Video.setParam(8, 0)
-
 
     def localize_object_in_image(self, rect, distance=None, width=None, camera=0, lookat=True, space=motion.SPACE_NAO):
         """
@@ -761,8 +686,48 @@ class Nao(object):
         yaw = HEAD_YAW + center_yaw
         pitch = HEAD_PITCH + center_pitch
         self.set_angles(['HeadYaw', 'HeadPitch'], [yaw, pitch], 0.2, radians=True)
-        
+		
+    def set_cam_vars(self):
 
+        """
+        when an self.nao = self.body.nao(0) has been introduced, a call of 
+        self.nao.set_cam_vars()
+        will set the camera parameters to the values hardcoded in this document		
+        """
+
+
+        kCameraBrightnessID = 0
+        kCameraContrastID = 1
+        kCameraSaturationID = 2
+        kCameraHueID = 3
+        kCameraRedChromaID = 4
+        kCameraBlueChromaID = 5
+        kCameraGainID = 6
+        kCameraAutoExpositionID = 11
+        kCameraAutoWhiteBalanceID = 12
+        kCameraAutoGainID = 13
+        kCameraExposureID = 17
+        kCameraExposureCorrectionID = 21
+        self.get_proxy("video").setParam(kCameraAutoGainID, 0)
+        self.get_proxy("video").setParam(kCameraAutoExpositionID, 0)
+        self.get_proxy("video").setParam(kCameraAutoWhiteBalanceID, 0)
+
+        self.get_proxy("video").setParam(kCameraExposureID, 274)			#exposure = 274
+        self.get_proxy("video").setParam(kCameraGainID, 76)					#Gain (steps) = 76
+        self.get_proxy("video").setParam(kCameraExposureCorrectionID, 0)	#Exposure correction = 0
+        self.get_proxy("video").setParam(kCameraBlueChromaID, 134)			#Blue chroma = 134
+        self.get_proxy("video").setParam(kCameraRedChromaID, 66)			#Red chroma = 66
+        self.get_proxy("video").setParam(kCameraBrightnessID, 124) 			#brightness = 124
+        self.get_proxy("video").setParam(kCameraContrastID, 70) 			#contrast = 70
+        self.get_proxy("video").setParam(kCameraSaturationID, 170) 			#saturation = 170
+        self.get_proxy("video").setParam(kCameraHueID, 0) 					#Hue = 0
+       
+#        self.get_proxy("video").stopVideo()
+
+
+    def stop_behavior(self,arg):
+        
+        self.get_proxy("behaviormanager").stopBehavior(arg)
 
 #########
 # NOTES #
